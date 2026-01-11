@@ -18,7 +18,7 @@ const data = await fetch('/api/truth');
     readingTime: 6,
     conceptDensity: "heavy",
     tags: ["ComputerScience", "Philosophy"],
-    imageColor: "#7c2d12" // specific hex for logic
+    imageUrl: "/1.jpeg"
   },
   {
     id: "post_002",
@@ -29,7 +29,7 @@ const data = await fetch('/api/truth');
     readingTime: 4,
     conceptDensity: "light",
     tags: ["SoftwareEng", "Archival"],
-    imageColor: "#44403c"
+    imageUrl: "/2.jpeg"
   },
   {
     id: "post_003",
@@ -40,7 +40,7 @@ const data = await fetch('/api/truth');
     readingTime: 8,
     conceptDensity: "medium",
     tags: ["WebDev", "Patterns"],
-    imageColor: "#134e4a"
+    imageUrl: "/3.jpeg"
   },
   {
     id: "post_004",
@@ -51,7 +51,7 @@ const data = await fetch('/api/truth');
     readingTime: 5,
     conceptDensity: "medium",
     tags: ["Infra", "Rant"],
-    imageColor: "#7f1d1d"
+    imageUrl: "/4.jpeg"
   },
   {
     id: "post_005",
@@ -62,6 +62,6 @@ const data = await fetch('/api/truth');
     readingTime: 7,
     conceptDensity: "heavy",
     tags: ["Algo", "Math"],
-    imageColor: "#312e81"
+    imageUrl: "/1.jpeg"
   }
 ];

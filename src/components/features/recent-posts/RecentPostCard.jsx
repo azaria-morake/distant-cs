@@ -23,6 +23,9 @@ const Card = styled(motion.div)`
 const ImageBox = styled.div`
   width: 100%;
   aspect-ratio: 1/1; /* Square */
+  background-image: url(${props => props.src});
+  background-size: cover;
+  background-position: center;
   background-color: ${props => props.color || '#ccc'};
   // border-bottom: ${({ theme }) => theme.borders.thick};
 `;
@@ -81,7 +84,7 @@ const RecentPostCard = ({ post }) => {
       whileTap={{ scale: 0.98 }}
       onClick={() => setActivePost(post)}
     >
-      <ImageBox color={post.imageColor} />
+      <ImageBox src={post.imageUrl} />
       <Content>
         <HeaderRow>
            <DateText>{new Date(post.publishedAt).toLocaleDateString(undefined, { month: 'short', day: 'numeric'})}</DateText>

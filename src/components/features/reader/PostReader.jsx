@@ -86,8 +86,7 @@ const PostReader = () => {
         <ContentWrapper>
           <HeaderBox>
             {/* Image Left (Compact) */}
-            <PostHero color={activePost.imageColor} compact={true} />
-            {/* Meta Right (Compact) */}
+            <PostHero src={activePost.imageUrl} compact={true} />            {/* Meta Right (Compact) */}
             <PostMeta 
               title={activePost.title}
               publishedAt={activePost.publishedAt}
