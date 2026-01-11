@@ -2,43 +2,50 @@ import styled from 'styled-components';
 import PostListItem from './PostListItem';
 
 const Card = styled.div`
-  /* Transparent background, just structure */
-  min-width: 320px;
-  max-width: 320px;
-  margin-right: ${({ theme }) => theme.spacing.lg};
-  
-  /* Left border only */
-  border-left: 1px solid ${({ theme }) => theme.colors.border};
-  padding-left: ${({ theme }) => theme.spacing.md};
+  width: 100%;
+  max-width: 360px;
+  flex-shrink: 0;
+  scroll-snap-align: center;
+  padding: 0 12px;
+`;
+
+const Inner = styled.div`
+  //background: ${({ theme }) => theme.colors.surface};
+  padding: 24px;
+  background-color: #fc8b0a;
+  //border-radius: 12px;
+  // border: ${({ theme }) => theme.borders.thin}; /* Thick outline always visible */
+  height: 100%;
 `;
 
 const MonthTitle = styled.h3`
-  font-family: ${({ theme }) => theme.fonts.mono};
-  font-size: 0.8rem;
-  color: ${({ theme }) => theme.colors.accent};
-  margin-bottom: ${({ theme }) => theme.spacing.lg};
-  display: flex;
-  align-items: center;
-  gap: 8px;
-
-  &::before {
-    content: '';
-    display: block;
-    width: 8px;
-    height: 8px;
-    background: ${({ theme }) => theme.colors.accent};
-  }
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: ${({ theme }) => theme.colors.text};
+  padding: 8px 12px;
+  background-color: #c5fa06;
+  // background: ${({ theme }) => theme.colors.background};
+  // border: ${({ theme }) => theme.borders.thin};
+  // border-radius: 6px;
+  margin-bottom: 20px;
+  display: inline-block;
 `;
 
-export default function MonthCard({ monthLabel, posts }) {
+const MonthCard = ({ label, posts }) => {
   return (
     <Card>
-      <MonthTitle>{monthLabel}</MonthTitle>
-      <div>
-        {posts.map(post => (
-          <PostListItem key={post.id} post={post} />
-        ))}
-      </div>
+      <Inner>
+        <MonthTitle>{label}</MonthTitle>
+        <div>
+          {posts.map(post => (
+            <PostListItem key={post.id} post={post} />
+          ))}
+        </div>
+      </Inner>
     </Card>
   );
-}
+};
+
+export default MonthCard;

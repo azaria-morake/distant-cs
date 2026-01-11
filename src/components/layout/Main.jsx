@@ -1,9 +1,21 @@
 import styled from 'styled-components';
+import Footer from './Footer';
 
-const MainWrapper = styled.main`
-  flex: 1;
+const MainContainer = styled.main`
+  max-width: 800px;
+  margin: 0 auto;
+  padding-bottom: 80px;
+  padding-top: 48px; /* Clean margin between Navbar and first section */
+  display: flex;
+  flex-direction: column;
+  gap: 56px; /* Increased gap between sections */
 `;
 
-export default function Main({ children }) {
-  return <MainWrapper>{children}</MainWrapper>;
-}
+const Main = ({ children }) => (
+  <>
+    <MainContainer>{children}</MainContainer>
+    <Footer />
+  </>
+);
+
+export default Main;

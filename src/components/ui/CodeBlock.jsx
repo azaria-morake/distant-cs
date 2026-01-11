@@ -1,66 +1,99 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import { Copy, Check } from 'lucide-react';
 
-const Container = styled.div`
-  position: relative;
-  margin: 2rem 0;
-  border-radius: ${({ theme }) => theme.borderRadius};
+const Block = styled.div`
+  background: ${({ theme }) => theme.colors.codeBackground};
+  border-radius: 8px;
   overflow: hidden;
+  margin: 32px 0;
+  border: 2px solid #000;
 `;
 
 const Header = styled.div`
   display: flex;
-  justify-content: flex-end;
-  padding: 8px 16px;
-  background: #EAE8E4; /* Slightly darker than code bg */
-  border-bottom: 1px solid ${({ theme }) => theme.colors.border};
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 12px;
+  background: #000;
+  border-bottom: 1px solid #333;
 `;
 
-const CopyButton = styled.button`
+const Dots = styled.div`
+  display: flex;
+  gap: 6px;
+`;
+
+const Dot = styled.div`
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: ${props => props.color};
+  border: 1px solid rgba(0,0,0,0.5);
+`;
+
+const CopyBtn = styled.button`
+  color: #fff;
   display: flex;
   align-items: center;
   gap: 6px;
-  font-size: 0.75rem;
-  color: ${({ theme }) => theme.colors.textSecondary};
-  &:hover { color: ${({ theme }) => theme.colors.text}; }
-`;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  padding: 4px 8px;
+  background: rgba(255,255,255,0.1);
+  border-radius: 4px;
+  transition: all 0.2s;
 
-const Pre = styled.pre`
-  background: ${({ theme }) => theme.colors.codeBackground};
-  padding: 16px;
-  overflow-x: auto;
-  font-family: ${({ theme }) => theme.fonts.mono};
-  font-size: 0.9rem;
-  line-height: 1.6;
-  
-  code {
-    background: none;
-    padding: 0;
+  &:hover {
+    background: rgba(255,255,255,0.2);
   }
 `;
 
-export default function CodeBlock({ children, className }) {
+const Code = styled.pre`
+  padding: 20px;
+  overflow-x: auto;
+  color: #fff;
+  font-family: ${({ theme }) => theme.fonts.mono};
+  font-size: 14px;
+  margin: 0;
+  line-height: 1.7;
+`;
+
+const CodeBlock = ({ children }) => {
   const [copied, setCopied] = useState(false);
-  const codeText = String(children).replace(/\n$/, '');
 
   const handleCopy = () => {
-    navigator.clipboard.writeText(codeText);
+    let text = "";
+    if (typeof children === 'string') {
+      text = children;
+    } else if (children.props && children.props.children) {
+      text = children.props.children;
+    }
+    
+    navigator.clipboard.writeText(text);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
 
   return (
-    <Container>
+    <Block>
       <Header>
-        <CopyButton onClick={handleCopy}>
+        <Dots>
+          <Dot color="#ff5f56" />
+          <Dot color="#ffbd2e" />
+          <Dot color="#27c93f" />
+        </Dots>
+        <CopyBtn onClick={handleCopy}>
           {copied ? <Check size={14} /> : <Copy size={14} />}
-          {copied ? "Copied" : "Copy"}
-        </CopyButton>
+          {copied ? 'COPIED' : 'COPY CODE'}
+        </CopyBtn>
       </Header>
-      <Pre className={className}>
-        <code>{children}</code>
-      </Pre>
-    </Container>
+      <Code>
+        {children}
+      </Code>
+    </Block>
   );
-}
+};
+
+export default CodeBlock;

@@ -1,16 +1,24 @@
+import React from 'react';
 import SectionHeader from '../../ui/SectionHeader';
+import RecentPostCard from './RecentPostCard';
 import PostCarousel from './PostCarousel';
 import { posts } from '../../../data/posts';
 
-export default function RecentPostsSection() {
+const RecentPostsSection = () => {
   const recentPosts = [...posts]
     .sort((a, b) => new Date(b.publishedAt) - new Date(a.publishedAt))
-    .slice(0, 10);
+    .slice(0, 5);
 
   return (
-    <section>
+    <section style={{ paddingLeft: '24px' }}>
       <SectionHeader title="Recent Posts" />
-      <PostCarousel posts={recentPosts} />
+      <PostCarousel>
+        {recentPosts.map(post => (
+          <RecentPostCard key={post.id} post={post} />
+        ))}
+      </PostCarousel>
     </section>
   );
-}
+};
+
+export default RecentPostsSection;

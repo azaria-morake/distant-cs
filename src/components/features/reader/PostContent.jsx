@@ -1,49 +1,49 @@
 import styled from 'styled-components';
-import ReactMarkdown from 'react-markdown';
-import CodeBlock from '../../ui/CodeBlock';
 
-const Wrapper = styled.div`
-  font-size: 1.125rem;
-  line-height: 1.75;
+const Body = styled.div`
+  font-size: 18px;
+  line-height: 1.7;
   color: ${({ theme }) => theme.colors.text};
-  margin-bottom: 4rem;
-
-  h1, h2, h3 { margin-top: 2.5rem; margin-bottom: 1rem; }
-  p { margin-bottom: 1.5rem; }
+  margin-top: 40px;
   
-  a {
-    color: ${({ theme }) => theme.colors.accent};
-    text-decoration: none;
-    &:hover { text-decoration: underline; }
+  h3 {
+    margin-top: 32px;
+    margin-bottom: 16px;
+    font-size: 22px;
+  }
+
+  p {
+    margin-bottom: 24px;
+  }
+
+  /* Basic styling for when content is injected */
+  pre {
+    background: ${({ theme }) => theme.colors.codeBackground};
+    padding: 16px;
+    border-radius: 4px;
+    overflow-x: auto;
+    margin-bottom: 24px;
+    color: #e0e0e0;
+    font-family: ${({ theme }) => theme.fonts.mono};
+    font-size: 14px;
+  }
+  
+  code {
+    font-family: ${({ theme }) => theme.fonts.mono};
+    background: rgba(0,0,0,0.05);
+    padding: 2px 4px;
+    border-radius: 2px;
+    font-size: 0.9em;
+  }
+  
+  pre code {
+    background: transparent;
+    padding: 0;
   }
 `;
 
-export default function PostContent({ content }) {
-  return (
-    <Wrapper>
-      <ReactMarkdown
-        components={{
-          code({node, inline, className, children, ...props}) {
-            const match = /language-(\w+)/.exec(className || '')
-            return !inline ? (
-              <CodeBlock className={className}>
-                {String(children).replace(/\n$/, '')}
-              </CodeBlock>
-            ) : (
-              <code style={{ 
-                background: '#F2F0ED', 
-                padding: '2px 6px', 
-                borderRadius: '4px',
-                fontSize: '0.9em' 
-              }} {...props}>
-                {children}
-              </code>
-            )
-          }
-        }}
-      >
-        {content}
-      </ReactMarkdown>
-    </Wrapper>
-  );
-}
+const PostContent = ({ htmlContent }) => (
+  <Body dangerouslySetInnerHTML={{ __html: htmlContent }} />
+);
+
+export default PostContent;

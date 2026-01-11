@@ -1,33 +1,33 @@
 import styled from 'styled-components';
-import { motion, useScroll } from 'framer-motion';
 
-const Container = styled.div`
-  position: fixed;
+const Track = styled.div`
+  position: absolute;
   right: 4px;
-  top: 50%;
-  transform: translateY(-50%);
-  height: 100px;
+  top: 80px;
+  bottom: 80px;
   width: 4px;
   background: rgba(0,0,0,0.05);
   border-radius: 2px;
-  z-index: 200;
-  /* Only show on mobile if intended, or keep global */
-  @media (min-width: 800px) { right: 20px; }
+  z-index: 60;
+  
+  @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
+    display: none;
+  }
 `;
 
-const Bar = styled(motion.div)`
+const Thumb = styled.div`
   width: 100%;
-  background: ${({ theme }) => theme.colors.accent};
+  background-color: ${({ theme }) => theme.colors.accent};
   border-radius: 2px;
-  transform-origin: top;
+  transition: height 0.1s linear;
 `;
 
-export default function ScrollIndicator({ targetRef }) {
-  const { scrollYProgress } = useScroll({ container: targetRef });
-
+const ScrollIndicator = ({ progress }) => {
   return (
-    <Container>
-      <Bar style={{ scaleY: scrollYProgress }} />
-    </Container>
+    <Track>
+      <Thumb style={{ height: `${Math.min(progress * 100, 100)}%` }} />
+    </Track>
   );
-}
+};
+
+export default ScrollIndicator;

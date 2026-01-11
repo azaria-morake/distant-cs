@@ -1,16 +1,17 @@
 import styled from 'styled-components';
 
-const Image = styled.div`
-  width: 100%;
-  aspect-ratio: 16/9;
-  background-image: url(${props => props.$src});
-  background-size: cover;
-  background-position: center;
-  border-radius: ${({ theme }) => theme.borderRadius};
-  margin-bottom: ${({ theme }) => theme.spacing.lg};
-  background-color: ${({ theme }) => theme.colors.codeBackground};
+const Container = styled.div`
+  width: ${props => props.compact ? '80px' : '100%'}; /* Smaller in Reader Header */
+  height: ${props => props.compact ? '80px' : 'auto'};
+  aspect-ratio: 1/1;
+  background-color: ${props => props.color}; // should be image
+  // border-radius: 4px;
+  flex-shrink: 0;
+  //border: ${({ theme }) => theme.borders.thin};
 `;
 
-export default function PostHero({ src }) {
-  return <Image $src={src} />;
-}
+const PostHero = ({ color, compact }) => (
+  <Container color={color} compact={compact} />
+);
+
+export default PostHero;

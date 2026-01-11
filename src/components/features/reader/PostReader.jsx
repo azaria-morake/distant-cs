@@ -1,73 +1,113 @@
-import { useEffect, useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import styled from 'styled-components';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { useBlogStore } from '../../../hooks/useBlogStore';
 import { posts } from '../../../data/posts';
 
-// Import our new breakdown components
 import ReaderHeader from './ReaderHeader';
 import PostHero from './PostHero';
 import PostMeta from './PostMeta';
 import PostContent from './PostContent';
-import ShareActions from './ShareActions';
 import PostNavigation from './PostNavigation';
 import ScrollIndicator from '../../ui/ScrollIndicator';
 
 const Overlay = styled(motion.div)`
   position: fixed;
-  top: 0; left: 0; right: 0; bottom: 0;
-  background: ${({ theme }) => theme.colors.background};
-  z-index: 100;
+  inset: 0;
+  z-index: 50;
+  background-color: ${({ theme }) => theme.colors.background};
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.05'/%3E%3C/svg%3E");
+  display: flex;
+  flex-direction: column;
+`;
+
+const ScrollContent = styled.div`
+  flex: 1;
   overflow-y: auto;
-  padding-bottom: 80px;
-
-/* Add a border on the left if on desktop to make it feel like a drawer */
-  @media (min-width: 800px) {
-    border-left: 1px solid ${({ theme }) => theme.colors.border};
-  }
+  overflow-x: hidden;
+  position: relative;
 `;
 
-const ContentContainer = styled.article`
-  max-width: 680px;
+const ContentWrapper = styled.div`
+  max-width: 720px;
   margin: 0 auto;
-  padding: 0 ${({ theme }) => theme.spacing.lg};
+  padding: 40px 24px 120px 24px;
 `;
 
-export default function PostReader() {
-  const { activePostId } = useBlogStore();
-  const post = posts.find(p => p.id === activePostId);
-  const scrollRef = useRef(null);
+/* Container for the Header items */
+const HeaderBox = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 16px; /* Tighter gap */
+  padding: 16px;
+  margin-bottom: 40px;
+  
+  /* The "Container inside parent" look */
+  // background: ${({ theme }) => theme.colors.surface};
+  // border: ${({ theme }) => theme.borders.thick};
+  // border-radius: 8px;
+  background-color: #b4fc2e;
+`;
 
-  // Disable body scroll on parent when reader is open
-  useEffect(() => {
-    if (activePostId) document.body.style.overflow = 'hidden';
-    else document.body.style.overflow = 'unset';
-    return () => { document.body.style.overflow = 'unset'; };
-  }, [activePostId]);
+const PostReader = () => {
+  const { activePost, setActivePost } = useBlogStore();
+  const scrollRef = useRef(null);
+  const [scrollProgress, setScrollProgress] = useState(0);
+
+  if (!activePost) return null;
+
+  const handleScroll = () => {
+    if (scrollRef.current) {
+      const { scrollTop, scrollHeight, clientHeight } = scrollRef.current;
+      const progress = scrollTop / (scrollHeight - clientHeight);
+      setScrollProgress(progress);
+    }
+  };
+
+  const idx = posts.findIndex(p => p.id === activePost.id);
+  const hasNext = idx < posts.length - 1;
+  const hasPrev = idx > 0;
+
+  const handleNext = () => { if (hasNext) setActivePost(posts[idx + 1]); };
+  const handlePrev = () => { if (hasPrev) setActivePost(posts[idx - 1]); };
 
   return (
-    <AnimatePresence>
-      {post && (
-        <Overlay
-          ref={scrollRef}
-          initial={{ y: "100%" }}
-          animate={{ y: 0 }}
-          exit={{ y: "100%" }}
-          transition={{ type: "spring", damping: 25, stiffness: 200 }}
-        >
-          <ScrollIndicator targetRef={scrollRef} />
-          <ReaderHeader />
+    <Overlay
+      initial={{ y: '100%' }}
+      animate={{ y: 0 }}
+      exit={{ y: '100%' }}
+      transition={{ type: "spring", damping: 25, stiffness: 200 }}
+    >
+      <ReaderHeader onClose={() => setActivePost(null)} />
+      <ScrollIndicator progress={scrollProgress} />
+      
+      <ScrollContent ref={scrollRef} onScroll={handleScroll}>
+        <ContentWrapper>
+          <HeaderBox>
+            {/* Image Left (Compact) */}
+            <PostHero color={activePost.imageColor} compact={true} />
+            {/* Meta Right (Compact) */}
+            <PostMeta 
+              title={activePost.title}
+              publishedAt={activePost.publishedAt}
+              readingTime={activePost.readingTime}
+              compact={true}
+            />
+          </HeaderBox>
 
-          <ContentContainer>
-            <PostHero src={post.featuredImage} />
-            <PostMeta post={post} />
-            <ShareActions title={post.title} />
-            <PostContent content={post.content} />
-            <PostNavigation currentPostId={post.id} />
-          </ContentContainer>
+          <PostContent htmlContent={activePost.content} />
 
-        </Overlay>
-      )}
-    </AnimatePresence>
+          <PostNavigation 
+            onNext={handleNext} 
+            onPrev={handlePrev} 
+            hasNext={hasNext} 
+            hasPrev={hasPrev} 
+          />
+        </ContentWrapper>
+      </ScrollContent>
+    </Overlay>
   );
-}
+};
+
+export default PostReader;

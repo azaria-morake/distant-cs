@@ -1,90 +1,96 @@
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
 import { useBlogStore } from '../../../hooks/useBlogStore';
-import { ArrowUpRight } from 'lucide-react';
 
 const Card = styled(motion.div)`
-  min-width: 300px;
-  max-width: 300px;
-  margin-right: ${({ theme }) => theme.spacing.md};
+  width: 260px;
+  flex-shrink: 0;
+  margin-right: 24px;
   cursor: pointer;
+  scroll-snap-align: start;
   
-  /* Outline Style */
-  border: 1px solid ${({ theme }) => theme.colors.border};
-  background: ${({ theme }) => theme.colors.background};
-  padding: ${({ theme }) => theme.spacing.md};
-  position: relative;
+  background-color: #b4fc2e;
+  // background: ${({ theme }) => theme.colors.surface};
+  //border: ${({ theme }) => theme.borders.thin};
+  // border-radius: 12px;
+  // border-bottom: 1px solid black;
+  overflow: hidden;
   
-  &:hover {
-    border-color: ${({ theme }) => theme.colors.accent};
-  }
+  display: flex; 
+  flex-direction: column; /* Reverted to Column */
 `;
 
-const Image = styled.div`
+const ImageBox = styled.div`
   width: 100%;
-  aspect-ratio: 16/9;
-  background-image: url(${props => props.$src});
-  background-size: cover;
-  background-position: center;
-  margin-bottom: ${({ theme }) => theme.spacing.md};
-  filter: grayscale(100%); /* Mono until hover? */
-  transition: filter 0.3s ease;
-  border-bottom: 1px solid ${({ theme }) => theme.colors.border};
-
-  ${Card}:hover & {
-    filter: grayscale(0%);
-    border-bottom-color: ${({ theme }) => theme.colors.accent};
-  }
+  aspect-ratio: 1/1; /* Square */
+  background-color: ${props => props.color || '#ccc'};
+  // border-bottom: ${({ theme }) => theme.borders.thick};
 `;
 
-const Meta = styled.div`
-  font-family: ${({ theme }) => theme.fonts.mono};
-  font-size: 0.7rem;
-  color: ${({ theme }) => theme.colors.accent};
-  margin-bottom: ${({ theme }) => theme.spacing.sm};
+const Content = styled.div`
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  flex: 1;
+`;
+
+const HeaderRow = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+`;
+
+const DensityPill = styled.div`
+  font-size: 9px;
   text-transform: uppercase;
+  font-weight: 800;
+  padding: 2px 6px;
+  // border-radius: 4px;
+  //border: 1px solid #000;
+  background-color: ${props => {
+    if (props.level === 'light') return props.theme.colors.densityLight;
+    if (props.level === 'medium') return props.theme.colors.densityMedium;
+    return props.theme.colors.densityHeavy;
+  }};
+  color: #000;
+`;
+
+const DateText = styled.span`
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: ${({ theme }) => theme.colors.textSecondary};
 `;
 
 const Title = styled.h3`
-  font-size: 1.1rem;
-  margin-bottom: ${({ theme }) => theme.spacing.sm};
-  color: ${({ theme }) => theme.colors.text};
-`;
-
-const Summary = styled.p`
-  font-size: 0.85rem;
-  color: ${({ theme }) => theme.colors.textSecondary};
-  line-height: 1.5;
-  font-family: ${({ theme }) => theme.fonts.mono}; /* Tech feel for body */
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.3;
   display: -webkit-box;
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
 `;
 
-const IconWrapper = styled.div`
-  position: absolute;
-  top: 12px;
-  right: 12px;
-  opacity: 0;
-  color: ${({ theme }) => theme.colors.accent};
-  transition: opacity 0.2s ease;
-
-  ${Card}:hover & {
-    opacity: 1;
-  }
-`;
-
-export default function RecentPostCard({ post }) {
-  const openPost = useBlogStore(state => state.openPost);
-
+const RecentPostCard = ({ post }) => {
+  const { setActivePost } = useBlogStore();
+  
   return (
-    <Card onClick={() => openPost(post.id)}>
-      <IconWrapper><ArrowUpRight size={20} /></IconWrapper>
-      <Image $src={post.featuredImage} />
-      <Meta>Create_Date: {new Date(post.publishedAt).toLocaleDateString()}</Meta>
-      <Title>{post.title}</Title>
-      <Summary>{post.summary}</Summary>
+    <Card 
+      whileTap={{ scale: 0.98 }}
+      onClick={() => setActivePost(post)}
+    >
+      <ImageBox color={post.imageColor} />
+      <Content>
+        <HeaderRow>
+           <DateText>{new Date(post.publishedAt).toLocaleDateString(undefined, { month: 'short', day: 'numeric'})}</DateText>
+           <DensityPill level={post.conceptDensity}>{post.conceptDensity}</DensityPill>
+        </HeaderRow>
+        <Title>{post.title}</Title>
+      </Content>
     </Card>
   );
-}
+};
+
+export default RecentPostCard;

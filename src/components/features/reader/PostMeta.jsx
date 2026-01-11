@@ -1,37 +1,43 @@
 import styled from 'styled-components';
-import TagPill from '../../ui/TagPill';
 
 const Container = styled.div`
-  margin-bottom: ${({ theme }) => theme.spacing.xl};
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1;
+  justify-content: center;
 `;
 
 const Title = styled.h1`
-  font-size: 2rem;
-  margin-bottom: ${({ theme }) => theme.spacing.sm};
-  color: ${({ theme }) => theme.colors.text};
+  font-size: ${props => props.compact ? '18px' : '24px'};
+  line-height: 1.3;
+  font-weight: 800;
+  
+  @media (min-width: 768px) {
+    font-size: ${props => props.compact ? '22px' : '32px'};
+  }
 `;
 
-const MetaText = styled.p`
+const MetaText = styled.div`
+  font-size: 12px;
   color: ${({ theme }) => theme.colors.textSecondary};
-  font-size: 0.9rem;
-  margin-bottom: ${({ theme }) => theme.spacing.md};
-`;
-
-const TagsRow = styled.div`
   display: flex;
+  flex-wrap: wrap;
   gap: 8px;
+  align-items: center;
+  font-weight: 600;
+  text-transform: uppercase;
 `;
 
-export default function PostMeta({ post }) {
-  return (
-    <Container>
-      <Title>{post.title}</Title>
-      <MetaText>
-        {new Date(post.publishedAt).toLocaleDateString()} • {post.readingTime} min read
-      </MetaText>
-      <TagsRow>
-        {post.tags.map(tag => <TagPill key={tag} label={tag} />)}
-      </TagsRow>
-    </Container>
-  );
-}
+const PostMeta = ({ title, publishedAt, readingTime, compact }) => (
+  <Container>
+    <MetaText>
+      {new Date(publishedAt).toLocaleDateString(undefined, { month: 'short', day: 'numeric'})}
+      <span>•</span>
+      {readingTime} min read
+    </MetaText>
+    <Title compact={compact}>{title}</Title>
+  </Container>
+);
+
+export default PostMeta;

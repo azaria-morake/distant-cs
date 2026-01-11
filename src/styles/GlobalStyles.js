@@ -1,35 +1,41 @@
 import { createGlobalStyle } from 'styled-components';
 
 export const GlobalStyles = createGlobalStyle`
-  /* RESET EVERYTHING */
+  @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;700&display=swap');
+
   * {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
   }
 
-  html, body {
-    height: 100%;
-    width: 100%;
-    /* FORCE BLACK BACKGROUND */
-    background-color: #050505 !important; 
-    color: #E0E0E0;
+  body {
+    background-color: ${({ theme }) => theme.colors.background};
+    /* Subtle Grain Texture */
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.05'/%3E%3C/svg%3E");
+    color: ${({ theme }) => theme.colors.text};
+    font-family: ${({ theme }) => theme.fonts.body};
+    line-height: 1.6;
     overflow-x: hidden;
   }
 
-  body {
-    font-family: 'Inter', sans-serif;
-    -webkit-font-smoothing: antialiased;
-    line-height: 1.6;
+  h1, h2, h3, h4 {
+    font-family: ${({ theme }) => theme.fonts.heading};
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: ${({ theme }) => theme.colors.text};
   }
 
-  h1, h2, h3, h4 {
-    font-weight: 600;
-    letter-spacing: -0.04em;
-    text-transform: uppercase;
-    color: #E0E0E0;
+  button {
+    border: none;
+    background: none;
+    cursor: pointer;
+    font-family: inherit;
   }
-  
-  /* FORCE LINK COLORS */
-  a { color: #00F0FF; }
+
+  /* Remove default shadows to keep the clean look */
+  * { box-shadow: none; }
+
+  .no-scrollbar::-webkit-scrollbar { display: none; }
+  .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 `;

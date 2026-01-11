@@ -1,36 +1,62 @@
 import styled from 'styled-components';
+import { motion } from 'framer-motion';
 import { useBlogStore } from '../../../hooks/useBlogStore';
+import TagPill from '../../ui/TagPill';
 
-const Item = styled.div`
-  padding: ${({ theme }) => theme.spacing.md} 0;
+const ItemContainer = styled(motion.div)`
+  padding: 16px 0;
   border-bottom: 1px solid ${({ theme }) => theme.colors.border};
   cursor: pointer;
-  
-  &:hover h4 { color: ${({ theme }) => theme.colors.accent}; }
-  &:last-child { border-bottom: none; }
+  background-color: #b4fc2e;
+  padding: 10px;
+  margin-bottom: 10px;
+
+  &:last-child {
+    border-bottom: 1px solid;
+  }
 `;
 
 const Title = styled.h4`
-  font-size: 1rem;
+  font-size: 16px;
   font-weight: 500;
-  color: ${({ theme }) => theme.colors.text};
-  margin-bottom: 4px;
-  text-transform: none; /* Keep titles readable */
-  transition: color 0.2s;
+  margin-bottom: 8px;
+  transition: color 0.2s ease;
+
+  ${ItemContainer}:hover & {
+    color: ${({ theme }) => theme.colors.accent};
+  }
 `;
 
-const Meta = styled.div`
-  font-family: ${({ theme }) => theme.fonts.mono};
-  font-size: 0.7rem;
-  color: ${({ theme }) => theme.colors.textSecondary};
+const MetaRow = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 `;
 
-export default function PostListItem({ post }) {
-  const openPost = useBlogStore(state => state.openPost);
+const ReadTime = styled.span`
+  font-size: 12px;
+  color: #303030;
+`;
+
+const PostListItem = ({ post }) => {
+  const { setActivePost } = useBlogStore();
+
   return (
-    <Item onClick={() => openPost(post.id)}>
-      <Title>{post.title} -- </Title>
-      <Meta>READ_TIME: {post.readingTime}M</Meta>
-    </Item>
+    <ItemContainer 
+      onClick={() => setActivePost(post)}
+      whileTap={{ x: 4 }}
+    >
+      <Title>{post.title}</Title>
+      <MetaRow>
+        <div>
+          {post.tags.slice(0, 2).map(tag => (
+            <TagPill key={tag} label={tag} />
+          ))}
+        </div>
+        <ReadTime>{post.readingTime} min read</ReadTime>
+      </MetaRow>
+    </ItemContainer>
   );
-}
+};
+
+export default PostListItem;

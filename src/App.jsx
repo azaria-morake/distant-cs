@@ -1,40 +1,41 @@
-import styled, { ThemeProvider } from 'styled-components';
+import React from 'react';
+import { ThemeProvider } from 'styled-components';
+import { AnimatePresence } from 'framer-motion';
 import { theme } from './styles/theme';
 import { GlobalStyles } from './styles/GlobalStyles';
+import { BlogProvider, useBlogStore } from './hooks/useBlogStore';
+
 import Navbar from './components/layout/Navbar';
+import Main from './components/layout/Main';
 import RecentPostsSection from './components/features/recent-posts/RecentPostsSection';
 import AllPostsSection from './components/features/all-posts/AllPostsSection';
-import PostReader from './components/features/reader/PostReader';
+import PostReader from './components/features/reader/PostReader'; //
 
-const AppContainer = styled.div`
-  min-height: 100vh;
-  padding-bottom: 80px;
-  max-width: 800px; 
-  margin: 0 auto;
-  position: relative;
-`;
-
-// Larger spacer
-const Spacer = styled.div` height: 80px; `;
+const BlogContent = () => {
+  const { activePost } = useBlogStore();
+  
+  return (
+    <>
+      <Navbar />
+      <Main>
+        <RecentPostsSection />
+        <AllPostsSection />
+      </Main>
+      
+      <AnimatePresence>
+        {activePost && <PostReader />}
+      </AnimatePresence>
+    </>
+  );
+};
 
 function App() {
   return (
     <ThemeProvider theme={theme}>
       <GlobalStyles />
-      <AppContainer>
-        <Navbar />
-        
-        <div style={{ padding: '20px 0' }}>
-          <RecentPostsSection />
-        </div>
-        
-        <Spacer />
-        
-        <AllPostsSection />
-
-        <PostReader />
-        
-      </AppContainer>
+      <BlogProvider>
+        <BlogContent />
+      </BlogProvider>
     </ThemeProvider>
   );
 }

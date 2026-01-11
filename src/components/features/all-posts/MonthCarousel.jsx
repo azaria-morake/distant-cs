@@ -1,28 +1,21 @@
 import styled from 'styled-components';
-import MonthCard from './MonthCard';
 
-const CarouselContainer = styled.div`
+const Container = styled.div`
   display: flex;
   overflow-x: auto;
-  padding: 0 ${({ theme }) => theme.spacing.md};
-  padding-bottom: ${({ theme }) => theme.spacing.xl};
-  scrollbar-width: none;
+  padding-bottom: 24px;
+  margin: 0 -24px;
+  padding-left: 16px;
+  padding-right: 16px;
+  scroll-snap-type: x mandatory;
+  
   &::-webkit-scrollbar { display: none; }
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 `;
 
-export default function MonthCarousel({ groupedPosts, sortedKeys, formatLabel }) {
-  return (
-    <CarouselContainer>
-      {sortedKeys.map(key => {
-        const label = formatLabel(key);
-        return (
-           <MonthCard 
-             key={key} 
-             monthLabel={label} 
-             posts={groupedPosts[key]} 
-           />
-        );
-      })}
-    </CarouselContainer>
-  );
-}
+const MonthCarousel = ({ children }) => (
+  <Container>{children}</Container>
+);
+
+export default MonthCarousel;

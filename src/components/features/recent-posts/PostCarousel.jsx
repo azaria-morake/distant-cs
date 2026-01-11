@@ -1,21 +1,20 @@
 import styled from 'styled-components';
-import RecentPostCard from './RecentPostCard';
 
-const CarouselContainer = styled.div`
+const Container = styled.div`
   display: flex;
   overflow-x: auto;
-  padding: 0 ${({ theme }) => theme.spacing.md};
-  padding-bottom: ${({ theme }) => theme.spacing.md};
-  scrollbar-width: none;
+  padding-bottom: 24px;
+  padding-right: 24px;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  
   &::-webkit-scrollbar { display: none; }
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 `;
 
-export default function PostCarousel({ posts }) {
-  return (
-    <CarouselContainer>
-      {posts.map(post => (
-        <RecentPostCard key={post.id} post={post} />
-      ))}
-    </CarouselContainer>
-  );
-}
+const PostCarousel = ({ children }) => (
+  <Container>{children}</Container>
+);
+
+export default PostCarousel;

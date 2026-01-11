@@ -1,33 +1,40 @@
 import styled from 'styled-components';
 import { X } from 'lucide-react';
-import { useBlogStore } from '../../../hooks/useBlogStore';
+import ShareActions from './ShareActions';
 
-const Header = styled.div`
+const Container = styled.div`
+  flex-shrink: 0;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 24px;
+  background: rgba(190, 139, 36, 0.95);
+  backdrop-filter: blur(5px);
+  border-bottom: 1px solid rgba(0,0,0,0.05);
   position: sticky;
   top: 0;
-  display: flex;
-  justify-content: flex-end;
-  padding: ${({ theme }) => theme.spacing.md};
-  background: ${({ theme }) => theme.colors.background};
-  z-index: 101;
-  opacity: 0.95;
+  z-index: 10;
 `;
 
-const CloseButton = styled.button`
+const CloseBtn = styled.button`
   padding: 8px;
-  border-radius: 50%;
-  background: ${({ theme }) => theme.colors.codeBackground};
-  display: flex;
-  align-items: center; justify-content: center;
+  margin-left: -8px;
+  color: ${({ theme }) => theme.colors.text};
+  
+  &:hover {
+    background: rgba(0,0,0,0.05);
+    border-radius: 50%;
+  }
 `;
 
-export default function ReaderHeader() {
-  const closePost = useBlogStore(state => state.closePost);
-  return (
-    <Header>
-      <CloseButton onClick={closePost}>
-        <X size={24} color="#1E1E1E" />
-      </CloseButton>
-    </Header>
-  );
-}
+const ReaderHeader = ({ onClose }) => (
+  <Container>
+    <CloseBtn onClick={onClose}>
+      <X size={24} />
+    </CloseBtn>
+    <ShareActions />
+  </Container>
+);
+
+export default ReaderHeader;
